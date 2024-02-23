@@ -32,7 +32,7 @@ class ApplicationServiceImplTest {
     @Spy
     private ModelMapper modelMapper;
 
-    @DisplayName("신청 등록을 하면 새로운 신청의 응답을 리턴한다.")
+    @DisplayName("신청 등록을 요청하면 Application Entity의 Response를 리턴한다.")
     @Test
     void Should_ReturnResponseOfNewApplyEntity_When_RequestApply() {
         Application entity = Application.builder()
