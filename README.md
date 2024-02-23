@@ -61,3 +61,42 @@
 
 <br/>
 
+### 04.대출 상담 조회 기능 구현
+- postman
+
+
+    <요청>
+    [GET] http://localhost:8080/counsels/1
+
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": {
+            "counselId": 1,
+            "name": "박아무",
+            "cellPhone": "010-1234-5678",
+            "email": "email@loan.com",
+            "memo": "대출 상담을 원함",
+            "address": "서울 아무곳",
+            "addressDetail": "123-45",
+            "zipCode": "11122",
+            "appliedAt": "2024-02-23T09:12:50.210548",
+            "createdAt": "2024-02-23T09:12:50.235548",
+            "updatedAt": "2024-02-23T09:12:50.235548"
+        }
+    }
+
+    <요청>
+    [GET] http://localhost:8080/counsels/2
+
+    <응답>
+    {
+        "result": {
+            "code": "9000",
+            "desc": "system error"
+        },
+        "data": null
+    }

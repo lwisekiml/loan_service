@@ -3,7 +3,11 @@ package com.example.loan.service;
 import com.example.loan.domain.Counsel;
 import com.example.loan.dto.CounselDTO.Request;
 import com.example.loan.dto.CounselDTO.Response;
+import com.example.loan.exception.BaseException;
+import com.example.loan.exception.ResultType;
 import com.example.loan.repository.CounselRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -12,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -63,4 +69,30 @@ class CounselServiceTest {
         assertThat(actual.getName()).isSameAs(entity.getName());
     }
 
+    @DisplayName("상담 엔티티가 존재할 경우 응답할 건데 대출 상담 아이디가 존재하는 경우에만 성공적으로 리턴(response)한다.")
+    @Test
+    void Should_ReturnResponseOfExistCounselEntity_When_RequestExistCounselId() {
+        Long findId = 1L;
+
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .build();
+
+        // 1번은 있는 엔티티라 가정, 없을 수 도 있으니까 ofNullable로 감싼다.
+        when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+
+        Response actual = counselService.get(findId);
+
+        assertThat(actual.getCounselId()).isSameAs(findId);
+    }
+
+    @DisplayName("없는 Id에 대한 엔티티 조회 요청을 실패 케이스 테스트")
+    @Test
+    void Should_ThrowException_When_RequestNotExistCounselId() {
+        Long findId = 2L;
+
+        when(counselRepository.findById(findId)).thenThrow(new BaseException(ResultType.SYSTEM_ERROR));
+
+        Assertions.assertThrows(BaseException.class, () -> counselService.get(2L));
+    }
 }
