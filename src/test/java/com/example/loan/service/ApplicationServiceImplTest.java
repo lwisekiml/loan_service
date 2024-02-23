@@ -80,10 +80,12 @@ class ApplicationServiceImplTest {
         Application entity = Application.builder()
                 .applicationId(1L)
                 .name("Member Kim")
+                .hopeAmount(BigDecimal.valueOf(50000000))
                 .build();
 
         Request request = Request.builder()
                 .name("Member Lee")
+                .hopeAmount(BigDecimal.valueOf(50000000))
                 .build();
 
         when(applicationRepository.save(ArgumentMatchers.any(Application.class))).thenReturn(entity);
@@ -93,5 +95,23 @@ class ApplicationServiceImplTest {
 
         assertThat(actual.getApplicationId()).isSameAs(findId);
         assertThat(actual.getName()).isSameAs(request.getName());
+        assertThat(actual.getHopeAmount()).isSameAs(request.getHopeAmount());
+    }
+
+    @DisplayName("존재하는 신청 정보를 삭제 요청하면 신청 정보를 삭제한다.")
+    @Test
+    void Should_DeletedApplicationEntity_When_RequestDeleteExistApplicationInfo() {
+        Long targetId = 1L;
+
+        Application entity = Application.builder()
+                .applicationId(1L)
+                .build();
+
+        when(applicationRepository.save(ArgumentMatchers.any(Application.class))).thenReturn(entity);
+        when(applicationRepository.findById(targetId)).thenReturn(Optional.ofNullable(entity));
+
+        applicationService.delete(targetId);
+
+        assertThat(entity.getIsDeleted()).isSameAs(true);
     }
 }

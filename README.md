@@ -158,6 +158,8 @@
         "data": null
     }
 
+<br/>
+
 ## Ch03. 대출 신청 기능 개발
 ### 02. 대출 신청 도메인 테이블 정의
     create table application (
@@ -281,6 +283,24 @@
             "createdAt": "2024-02-23T13:31:07.693796",
             "updatedAt": "2024-02-23T13:31:20.4315625"
         }
+    }
+
+<br/>
+
+### 06.대출 신청 삭제 기능 구현
+- postman
+
+
+    <요청>
+    [DELETE] http://localhost:8080/applications/1
+    
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": null
     }
 
 <br/>

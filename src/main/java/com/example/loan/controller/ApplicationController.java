@@ -31,4 +31,10 @@ public class ApplicationController {
     public ResponseDTO<Response> update(@PathVariable Long applicationId, @RequestBody Request request) {
         return ok(applicationService.update(applicationId, request));
     }
+
+    @DeleteMapping("/{applicationId}")
+    public ResponseDTO<Void> delete(@PathVariable Long applicationId) {
+        applicationService.delete(applicationId);
+        return ok();
+    }
 }
