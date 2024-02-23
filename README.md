@@ -251,4 +251,37 @@
 
 <br/>
 
+### 05.대출 상담 수정 기능 구현
+- postman
+
+
+    <요청>
+    [PUT] http://localhost:8080/applications/1
+    [json]
+    {
+        "name":"김아무",
+        "cellPhone":"010-5678-1234",
+        "email":"email@loan.com",
+        "hopeAmount":"50"
+    }
+
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": {
+            "applicationId": 1,
+            "name": "김아무",
+            "cellPhone": "010-5678-1234",
+            "email": "email@loan.com",
+            "hopeAmount": 50,
+            "appliedAt": "2024-02-23T13:31:07.669799",
+            "createdAt": "2024-02-23T13:31:07.693796",
+            "updatedAt": "2024-02-23T13:31:20.4315625"
+        }
+    }
+
+<br/>
 
