@@ -100,3 +100,43 @@
         },
         "data": null
     }
+
+<br/>
+
+### 05.대출 상담 수정 기능 구현
+- postman
+
+
+    <요청>
+    [PUT] http://localhost:8080/counsels/1
+    [json]
+    {
+        "name":"김아무",
+        "cellPhone":"010-5678-1234",
+        "email":"email@loan.com",
+        "memo":"대출 상담을 원함",
+        "address":"수원 아무곳",
+        "addressDetail":"123-45",
+        "zipCode":"22211"
+    }
+
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": {
+            "counselId": 1,
+            "name": "김아무",
+            "cellPhone": "010-5678-1234",
+            "email": "email@loan.com",
+            "memo": "대출 상담을 원함",
+            "address": "수원 아무곳",
+            "addressDetail": "123-45",
+            "zipCode": "22211",
+            "appliedAt": "2024-02-23T09:42:47.275373",
+            "createdAt": "2024-02-23T09:42:47.299372",
+            "updatedAt": "2024-02-23T09:43:11.5815086"
+        }
+    }
