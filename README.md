@@ -346,7 +346,7 @@
 
 <br/>
 
-## Ch08. 이용 약관 조회 기능 구현
+## 08. 이용 약관 조회 기능 구현
 - postman
 
 
@@ -393,3 +393,131 @@
     }
 
 <br/>
+
+## 09. 대출 신청 이용 약관 등록 기능 구현
+고객이 대출 신청 약관을 동의한 정보를 기록하기 위한 기능 추가
+
+    > 약관 2개 등록
+    [POST] http://localhost:8080/terms
+
+    <요청 1>
+    {
+        "name":"신청 이용 약관1",
+        "termsDetailUrl":"https://abc-storage.acc/dslfjdlsfjlsd"
+    }
+
+    <응답 1>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": {
+            "termsId": 1,
+            "name": "신청 이용 약관1",
+            "termsDetailUrl": "https://abc-storage.acc/dslfjdlsfjlsd",
+            "createdAt": "2024-02-23T17:30:51.3996297",
+            "updatedAt": "2024-02-23T17:30:51.3996297"
+        }
+    }
+    
+    <요청 2>
+    {
+        "name":"신청 이용 약관2",
+        "termsDetailUrl":"https://abc-storage.acc/dslfjdlsfjlsd"
+    }
+
+    <응답 2>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": {
+            "termsId": 2,
+            "name": "신청 이용 약관2",
+            "termsDetailUrl": "https://abc-storage.acc/dslfjdlsfjlsd",
+            "createdAt": "2024-02-23T17:31:45.1710841",
+            "updatedAt": "2024-02-23T17:31:45.1710841"
+        }
+    }
+
+    
+    > 신청 1개 등록
+    [POST] http://localhost:8080/application
+
+    <요청>
+    {
+        "name":"박아무",
+        "cellPhone":"010-1234-5678",
+        "email":"email@loan.com",
+        "hopeAmount":5000000
+    }
+
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": {
+            "applicationId": 1,
+            "name": "박아무",
+            "cellPhone": "010-1234-5678",
+            "email": "email@loan.com",
+            "hopeAmount": 5000000,
+            "appliedAt": "2024-02-23T17:32:34.9390498",
+            "createdAt": "2024-02-23T17:32:34.9430494",
+            "updatedAt": "2024-02-23T17:32:34.9430494"
+        }
+    }
+    
+    > 신청 약관 등록
+    [POST] http://localhost:8080/1/terms
+
+    <정상 요청>
+    {
+        "acceptTermsIds":[1, 2] // 약관에 동의한 수(약관 id를 넣으면 된다.)
+    }
+
+    <정상 응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": true
+    }
+    
+    <실패 요청>
+    {
+        "acceptTermsIds":[1, 3]
+    }
+    <실패 응답>
+    {
+        "result": {
+            "code": "9000",
+            "desc": "system error"
+        },
+        "data": null
+    }
+        
+    <실패 요청>
+    {
+        "acceptTermsIds":[1]
+    }
+    <실패 응답>
+    {
+        "result": {
+            "code": "9000",
+            "desc": "system error"
+        },
+        "data": null
+    }
+
+<br/>
+
+
+
+
+
