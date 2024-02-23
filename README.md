@@ -140,3 +140,21 @@
             "updatedAt": "2024-02-23T09:43:11.5815086"
         }
     }
+
+<br/>
+
+### 06.대출 상담 삭제 기능 구현
+- postman
+
+
+    <요청>
+    [DELETE] http://localhost:8080/counsels/1
+    
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": null
+    }

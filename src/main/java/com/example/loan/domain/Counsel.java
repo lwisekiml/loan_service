@@ -23,7 +23,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "is_deleted=false") // is_deleted가 false인 경우 삭제X
+@Where(clause = "is_deleted=false") // is_deleted 깂의 true/false로 삭제된 데이터인지 알 수 있다.
 public class Counsel extends BaseEntity {
 
     @Id

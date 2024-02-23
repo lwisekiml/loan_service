@@ -96,7 +96,7 @@ class CounselServiceTest {
         Assertions.assertThrows(BaseException.class, () -> counselService.get(2L));
     }
 
-    @DisplayName("해당하는 자원이 있는 엔티티만 수정할 것이다.")
+    @DisplayName("해당하는 자원이 있는 엔티티만 수정 가능")
     @Test
     void Should_ReturnUpdatedResponseOfExistCounselEntity_When_RequestUpdateExistCounselInfo() {
         Long findId = 1L;
@@ -119,4 +119,20 @@ class CounselServiceTest {
         assertThat(actual.getName()).isSameAs(request.getName());
     }
 
+    @DisplayName("존재하는 상담 내용이 있을 때, 삭제 요청이 오면 삭제한다.")
+    @Test
+    void Should_DeletedCounselEntity_When_RequestDeleteExistCounselInfo() {
+        Long targetId = 1L;
+
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .build();
+
+        when(counselRepository.save(ArgumentMatchers.any(Counsel.class))).thenReturn(entity);
+        when(counselRepository.findById(targetId)).thenReturn(Optional.ofNullable(entity));
+
+        counselService.delete(targetId);
+
+        assertThat(entity.getIsDeleted()).isSameAs(true);
+    }
 }
