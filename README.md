@@ -19,3 +19,45 @@
         primary key (counsel_id)
     )
 
+<br/>
+
+### 03. 대출 상담 등록 기능 구현
+- postman  
+
+
+    <요청>
+    [POST] http://localhost:8080/counsels  
+    [json]
+    {
+        "name":"박아무",
+        "cellPhone":"010-1234-5678",
+        "email":"email@loan.com",
+        "memo":"대출 상담을 원함",
+        "address":"서울 아무곳",
+        "addressDetail":"123-45",
+        "zipCode":"11122"
+    }
+
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": {
+            "counselId": 1,
+            "name": "박아무",
+            "cellPhone": "010-1234-5678",
+            "email": "email@loan.com",
+            "memo": "대출 상담을 원함",
+            "address": "서울 아무곳",
+            "addressDetail": "123-45",
+            "zipCode": "11122",
+            "appliedAt": "2024-02-23T09:12:50.2105476",
+            "createdAt": "2024-02-23T09:12:50.2355479",
+            "updatedAt": "2024-02-23T09:12:50.2355479"
+        }
+    }
+
+<br/>
+
