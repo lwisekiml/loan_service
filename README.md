@@ -158,4 +158,38 @@
         "data": null
     }
 
-## Ch03. 대출 신청 기능 개발
+## Ch03. 대출 신청 등록 기능 구현
+- postman
+
+
+    <요청>
+    [POST] http://localhost:8080/applications
+    [json]
+    {
+        "name":"박아무",
+        "cellPhone":"010-1234-5678",
+        "email":"email@loan.com",
+        "hopeAmount":5000000
+    }
+
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": {
+            "applicationId": 1,
+            "name": "박아무",
+            "cellPhone": "010-1234-5678",
+            "email": "email@loan.com",
+            "hopeAmount": 5000000,
+            "appliedAt": "2024-02-23T12:19:19.5854754",
+            "createdAt": "2024-02-23T12:19:19.6104735",
+            "updatedAt": "2024-02-23T12:19:19.6104735"
+        }
+    }
+
+<br/>
+
+
