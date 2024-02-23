@@ -40,6 +40,7 @@ class CounselServiceTest {
     @Spy // 목킹처리 보단 ModelMapper 말 그대로 각각 다른 오브젝트를 맵핑해주는 유틸성으로 모킹처리 없이 역할 자체를 순수하게 하기 위해서 @Spy로 지정
     private ModelMapper modelMapper;
 
+    @DisplayName("상담 등록을 요청하면 Counsel Entity의 Response를 리턴한다.")
     @Test
     void Should_ReturnResponseOfNewCounselEntity_When_RequestCounsel() {
         Counsel entity = Counsel.builder()
@@ -69,7 +70,7 @@ class CounselServiceTest {
         assertThat(actual.getName()).isSameAs(entity.getName());
     }
 
-    @DisplayName("상담 엔티티가 존재할 경우 응답할 건데 대출 상담 아이디가 존재하는 경우에만 성공적으로 리턴(response)한다.")
+    @DisplayName("요청한 Counsel ID가 존재할 때 Counsel Entity의 Response를 리턴한다.")
     @Test
     void Should_ReturnResponseOfExistCounselEntity_When_RequestExistCounselId() {
         Long findId = 1L;
@@ -96,7 +97,7 @@ class CounselServiceTest {
         Assertions.assertThrows(BaseException.class, () -> counselService.get(2L));
     }
 
-    @DisplayName("해당하는 자원이 있는 엔티티만 수정 가능")
+    @DisplayName("존재하는 상담 정보를 수정 요청할 때 Update 된 Counsel Entity의 Response를 리턴한다.")
     @Test
     void Should_ReturnUpdatedResponseOfExistCounselEntity_When_RequestUpdateExistCounselInfo() {
         Long findId = 1L;
@@ -119,7 +120,7 @@ class CounselServiceTest {
         assertThat(actual.getName()).isSameAs(request.getName());
     }
 
-    @DisplayName("존재하는 상담 내용이 있을 때, 삭제 요청이 오면 삭제한다.")
+    @DisplayName("존재하는 상담 정보를 삭제 요청하면 상담 정보를 삭제한다.")
     @Test
     void Should_DeletedCounselEntity_When_RequestDeleteExistCounselInfo() {
         Long targetId = 1L;
