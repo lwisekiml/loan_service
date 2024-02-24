@@ -638,4 +638,94 @@ entry가 삭제 되었을 때 balance도 0으로 바꾸는 것으로 구현
 -> 대출 상환(ex> 1,000,000) -> 대출 상환 정보 조회
 -> 대출 상환 정보 삭제 -> 대출 상환(ex> 2,000,000) -> 대출 상환 정보 조회(2백만원이 상환된 것을 확인할 수 있다.) 
 
+<br/>
+
+## Ch 07. 컨테이너 배포
+### 02. Docker, Kubernetes 환경 설치
+1.Docker 설치
+2.도커 - setting - Kubernetes - Enable Kubernetes - Apply & restart  
+[참고] https://kubernetes.io/ko/docs/tasks/tools/install-kubectl-windows/
+
+    # cmd 창
+    > kubectl version --client
+    Client Version: v1.28.2
+    Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
+    > kubectl get svc			// 쿠버가 정상적으로 떠있다.(정상 셋업)
+    NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+    kubernetes   ClusterIP                <none>        443/TCP   5m9s
+
+<br/>
+
+### 03. JIB를 통한 Docker 이미지 생성
+[참고] MySQL https://dev.mysql.com/downloads/installer/
+
+1.mysql에 loan 테이블 생성
+
+    mysql> create database loan;
+    mysql> show databases;
+    +--------------------+
+    | Database           |
+    +--------------------+
+    | loan               |
+    | sys                |
+    +--------------------+
+
+2.application.yml
+
+    도커 내에서 바라보는 db는 로컬 pc 환경에 있는 mysql을 바라본다.
+    도커 컨테이너에서는 로컬 호스트를 실행 하면 컨테이너 내에 로컬 호스트라서 로컬 pc의 호스트와는 다르다.
+    그래서 application.yml애서 url값을 host.docker.internal 로 한다.
+
+3.인텔리제이
+
+    gradle -> Tasks -> jib -> jibDockerBuild
+
+4.cmd
+
+    > docker images
+    REPOSITORY      TAG     IMAGE ID       CREATED              SIZE
+    example-loan    0.0.1   e6b3f86e49b6   About a minute ago   267MB
+
+5.cmd
+
+    > docker run -ti example-loan /bin/bash
+    # 인텔리제이 스프링 실행
+
+6.mysql table 확인
+
+    mysql> use loan
+    Database changed
+    mysql> show tables;
+    +----------------+
+    | Tables_in_loan |
+    +----------------+
+    | accept_terms   |
+    | application    |
+    | balance        |
+    | counsel        |
+    | entry          |
+    | judgment       |
+    | repayment      |
+    | terms          |
+    +----------------+
+
+<br/>
+
+### 04. Skaffold를 통한 Kubernetes에 배포
+이미지를 빌드하고 그 이미지를 통해 쿠버네티스 환경에 배포
+
+[참고] skaffold https://skaffold.dev/
+
+    다운 받은 .exe 파일 위치를 Path에 등록 후 아래 부터 시작
+    > skaffold dev
+    # 스프링까지 다 실행 된다.
+
+    # 다른 cmd 창에서 아래 실행하여 확인
+    > kubectl get svc
+    NAME           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+    example-loan   LoadBalancer                   localhost     8080:32036/TCP   2m5s
+    kubernetes     ClusterIP                      <none>        443/TCP          66m
+    > kubectl get pods
+    NAME                            READY   STATUS    RESTARTS   AGE
+    example-loan-65dd7c4878-r9vs7   1/1     Running   0          2m26s
 
