@@ -23,7 +23,7 @@ import static com.example.loan.dto.ResponseDTO.ok;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/applications")
-public class ApplicationController {
+public class ApplicationController extends AbstractController {
 
     private final ApplicationService applicationService;
 
@@ -55,24 +55,30 @@ public class ApplicationController {
         return ok(applicationService.acceptTerms(applicationId, request));
     }
 
-    @PostMapping("/files")
-    public ResponseDTO<Void> upload(MultipartFile file) {
-        fileStorageService.save(file);
+    @PostMapping(value = "/{applicationId}/files")
+    public ResponseDTO<Void> upload(@PathVariable Long applicationId, MultipartFile file) throws IllegalStateException {
+        fileStorageService.save(applicationId, file);
         return ok();
     }
 
-    @GetMapping("/files")
-    public ResponseEntity<Resource> download(@RequestParam(value = "fileName") String fileName) {
-        Resource file = fileStorageService.load(fileName);
+    @GetMapping("/{applicationId}/files")
+    public ResponseEntity<Resource> download(@PathVariable Long applicationId, @RequestParam(value = "filename") String filename) throws IllegalStateException {
+        Resource file = fileStorageService.load(applicationId, filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
+    @DeleteMapping("/{applicationId}/files")
+    public ResponseDTO<Void> deleteAll(@PathVariable Long applicationId) {
+        fileStorageService.deleteAll(applicationId);
+        return ok();
+    }
+
     // 한 대출 신청 정보에 어떤 입회 서류들이 올라와 있는지 확인해야 되는 경우가 있다.
     // 내가 없로드한 파일 정보를 알 수 있는 기능
-    @GetMapping("/files/infos")
-    public ResponseDTO<List<FileDTO>> getFileInfos() {
-        List<FileDTO> fileInfos = fileStorageService.loadAll().map(path -> {
+    @GetMapping("/{applicationId}/files/info")
+    public ResponseDTO<List<FileDTO>> getFileInfos(@PathVariable Long applicationId) {
+        List<FileDTO> fileInfos = fileStorageService.loadAll(applicationId).map(path -> {
             String fileName = path.getFileName().toString();
             return FileDTO.builder()
                     .name(fileName)
@@ -80,15 +86,8 @@ public class ApplicationController {
                      * 그래서 여기서 파일 데이터를 리턴해 주기 위해 내부적으로 URI를 통해 정보를 요청하고 그 요청한 정보를 받아와서 client에 내려 주어야 한다.
                      * URI를 통해 제공해 줄때 MVC URI 컴포넌트 빌더를 사용해서 실제로 다운로드할 파일을 (위에거 만들어 놓은) download()를 통해 URI를 준비 해준다.
                      */
-                    .url(MvcUriComponentsBuilder.fromMethodName(ApplicationController.class, "download", fileName).build().toString())
-                    .build();
+                    .url(MvcUriComponentsBuilder.fromMethodName(ApplicationController.class, "download", applicationId, fileName).build().toString()).build();
         }).collect(Collectors.toList());
         return ok(fileInfos);
-    }
-
-    @DeleteMapping("/files")
-    public ResponseDTO<Void> deleteAll() {
-        fileStorageService.deleteAll();
-        return ok();
     }
 }
