@@ -517,6 +517,32 @@
 
 <br/>
 
+### 10.대출 신청 서류 등록 기능 구현
+
+- postman
+
+
+    <요청>
+    [POST] http://localhost:8080/applications/files
+    [form-data]
+    image 파일 업로드
+
+    <응답>
+    {
+        "result": {
+            "code": "0000",
+            "desc": "success"
+        },
+        "data": null
+    }
+
+    설정한 위치에 image파일이 있는지 확인 한다.
+![img.png](image/img.png)
+
+<br/>
+
+
+
 
 
 

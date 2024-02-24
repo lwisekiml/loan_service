@@ -14,7 +14,7 @@ import static com.example.loan.dto.ResponseDTO.ok;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/terms")
-public class TermsController {
+public class TermsController extends AbstractController {
 
     private final TermsService termsService;
 
