@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-loan
+  namespace: default
+  labels:
+    app: example-loan
+spec:
+  selector:
+    app: example-loan
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
