@@ -4,6 +4,7 @@ import com.example.loan.domain.Application;
 import com.example.loan.domain.Entry;
 import com.example.loan.dto.BalanceDTO;
 import com.example.loan.dto.EntryDTO;
+import com.example.loan.dto.EntryDTO.Response;
 import com.example.loan.exception.BaseException;
 import com.example.loan.exception.ResultType;
 import com.example.loan.repository.ApplicationRepository;
@@ -27,7 +28,7 @@ public class EntryServiceImpl implements EntryService {
     private final ModelMapper modelMapper;
 
     @Override // 대출 집행
-    public EntryDTO.Response create(Long applicationId, EntryDTO.Request request) {
+    public Response create(Long applicationId, EntryDTO.Request request) {
         // 계약 체결 여부 검증
         if (!isContractApplication(applicationId)) {
             throw new BaseException(ResultType.SYSTEM_ERROR);
@@ -44,7 +45,18 @@ public class EntryServiceImpl implements EntryService {
                         .entryAmount(request.getEntryAmount())
                         .build());
 
-        return modelMapper.map(entry, EntryDTO.Response.class);
+        return modelMapper.map(entry, Response.class);
+    }
+
+    @Override
+    public Response get(Long applicationId) {
+        Optional<Entry> entry = entryRepository.findByApplicationId(applicationId);
+
+        if (entry.isPresent()) {
+            return modelMapper.map(entry, Response.class);
+        } else {
+            return null;
+        }
     }
 
     /**
