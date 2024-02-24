@@ -40,6 +40,23 @@ public class BalanceDTO implements Serializable {
     @Builder
     @Getter
     @Setter
+    public static class RepaymentRequest {
+
+        public enum RepaymentType {
+            ADD, // 상환금을 넣었을 때
+            REMOVE // 상환금을 뺐을 때
+        }
+
+        private RepaymentType type;
+
+        private BigDecimal repaymentAmount;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Getter
+    @Setter
     public static class Response {
         private Long balanceId;
 
