@@ -90,4 +90,10 @@ public class ApplicationController extends AbstractController {
         }).collect(Collectors.toList());
         return ok(fileInfos);
     }
+
+    @PutMapping("/{applicationId}/contract") //기존에 있는 데이터를 업데이트 하는 것이라 PUT 사용
+    public ResponseDTO<Response> contract(@PathVariable Long applicationId) {
+        ResponseDTO<Response> ok = ok(applicationService.contract(applicationId));
+        return ok(applicationService.contract(applicationId));
+    }
 }

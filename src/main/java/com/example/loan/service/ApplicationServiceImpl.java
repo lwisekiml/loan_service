@@ -9,12 +9,14 @@ import com.example.loan.exception.BaseException;
 import com.example.loan.exception.ResultType;
 import com.example.loan.repository.AcceptTermsRepository;
 import com.example.loan.repository.ApplicationRepository;
+import com.example.loan.repository.JudgmentRepository;
 import com.example.loan.repository.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,8 @@ public class ApplicationServiceImpl implements ApplicationService{
     private final TermsRepository termsRepository;
 
     private final AcceptTermsRepository acceptTermsRepository;
+
+    private final JudgmentRepository judgmentRepository;
 
     private final ModelMapper modelMapper;
 
@@ -115,5 +119,38 @@ public class ApplicationServiceImpl implements ApplicationService{
         }
 
         return true;
+    }
+
+    @Override
+    public Response contract(Long applicationId) {
+        // 신청 정보 유부
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // 심사 정보 유무
+        judgmentRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // 승인 금액 > 0
+        /*
+            대출 승인 금액은 심사 과정에서
+            JudgmentServiceImpl - grant() 에서
+            application.setApprovalAmount(approvalAmount);
+            로 신청 정보에 같이 세팅을 해주고 있으므로 이 값을 검증
+            0원일 경우 대출 신청을 못하게끔 정함
+         */
+        if (application.getApprovalAmount() == null
+                || application.getApprovalAmount().compareTo(BigDecimal.ZERO) == 0) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+
+        // 계약 체결
+        application.setContractedAt(LocalDateTime.now());
+
+        Application updated = applicationRepository.save(application);
+
+        return modelMapper.map(updated, Response.class);
     }
 }
