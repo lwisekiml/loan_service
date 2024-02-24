@@ -2,6 +2,7 @@ package com.example.loan.service;
 
 import com.example.loan.domain.Balance;
 import com.example.loan.dto.BalanceDTO;
+import com.example.loan.dto.BalanceDTO.RepaymentRequest.RepaymentType;
 import com.example.loan.dto.BalanceDTO.Response;
 import com.example.loan.exception.BaseException;
 import com.example.loan.exception.ResultType;
@@ -53,6 +54,30 @@ public class BalanceServiceImpl implements BalanceService {
 
         // as-is -> to-be
         updatedBalance = updatedBalance.subtract(beforeEntryAmount).add(afterEntryAmount);
+        balance.setBalance(updatedBalance);
+
+        Balance updated = balanceRepository.save(balance);
+
+        return modelMapper.map(updated, Response.class);
+    }
+
+    @Override
+    public Response repaymentUpdate(Long applicationId, BalanceDTO.RepaymentRequest request) {
+        Balance balance = balanceRepository.findByApplicationId(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        BigDecimal updatedBalance = balance.getBalance();
+        BigDecimal repaymentAmount = request.getRepaymentAmount();
+
+        // 상환 정상: balance - repaymentAmount
+        // 상환금 롤백 : balance + repaymentAmount
+        if (request.getType().equals(RepaymentType.ADD)) {
+            updatedBalance = updatedBalance.add(repaymentAmount);
+        } else {
+            updatedBalance = updatedBalance.subtract(repaymentAmount);
+        }
+
         balance.setBalance(updatedBalance);
 
         Balance updated = balanceRepository.save(balance);
