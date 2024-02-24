@@ -7,6 +7,9 @@ import com.example.loan.dto.ResponseDTO;
 import com.example.loan.service.ApplicationService;
 import com.example.loan.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,12 +18,11 @@ import static com.example.loan.dto.ResponseDTO.ok;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/applications")
-public class ApplicationController extends AbstractController {
+public class ApplicationController {
 
     private final ApplicationService applicationService;
 
     private final FileStorageService fileStorageService;
-
 
     @PostMapping
     public ResponseDTO<Response> create(@RequestBody Request request) {
@@ -52,5 +54,12 @@ public class ApplicationController extends AbstractController {
     public ResponseDTO<Void> upload(MultipartFile file) {
         fileStorageService.save(file);
         return ok();
+    }
+
+    @GetMapping("/files")
+    public ResponseEntity<Resource> download(@RequestParam(value = "fileName") String fileName) {
+        Resource file = fileStorageService.load(fileName);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 }
