@@ -6,7 +6,9 @@ import com.example.loan.domain.Repayment;
 import com.example.loan.dto.BalanceDTO;
 import com.example.loan.dto.BalanceDTO.RepaymentRequest.RepaymentType;
 import com.example.loan.dto.RepaymentDTO;
+import com.example.loan.dto.RepaymentDTO.ListResponse;
 import com.example.loan.dto.RepaymentDTO.Response;
+import com.example.loan.dto.RepaymentDTO.UpdateResponse;
 import com.example.loan.exception.BaseException;
 import com.example.loan.exception.ResultType;
 import com.example.loan.repository.ApplicationRepository;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,12 +69,53 @@ public class RepaymentServiceImpl implements RepaymentService {
     }
 
     @Override
-    public List<RepaymentDTO.ListResponse> get(Long applicationId) {
+    public List<ListResponse> get(Long applicationId) {
         List<Repayment> repayments = repaymentRepository.findAllByApplicationId(applicationId);
 
         return repayments.stream()
-                .map(r -> modelMapper.map(r, RepaymentDTO.ListResponse.class))
+                .map(r -> modelMapper.map(r, ListResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UpdateResponse update(Long repaymentId, Request request) {
+        Repayment repayment = repaymentRepository.findById(repaymentId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        Long applicationId = repayment.getApplicationId();
+        BigDecimal beforeRepaymentAmount = repayment.getRepaymentAmount();
+
+        // 예를 들어 200을 빼야 하는데
+        // 500 - 100 = 400 으로 만들어서
+        // 400 + 100 = 500 으로 만들고
+        // 500 - 200 = 300 으로 만드는 상황이다.
+        balanceService.repaymentUpdate(applicationId,
+                BalanceDTO.RepaymentRequest.builder()
+                        .repaymentAmount(beforeRepaymentAmount)
+                        .type(RepaymentType.ADD)
+                        .build()
+        );
+
+        repayment.setRepaymentAmount(request.getRepaymentAmount());
+        repaymentRepository.save(repayment);
+
+        BalanceDTO.Response updatedBalance = balanceService.repaymentUpdate(applicationId,
+                BalanceDTO.RepaymentRequest.builder()
+                        .repaymentAmount(request.getRepaymentAmount())
+                        .type(RepaymentType.REMOVE)
+                        .build()
+        );
+
+        // 변경된 잔고는 얼마야
+        return UpdateResponse.builder()
+                .applicationId(applicationId)
+                .beforeRepaymentAmount(beforeRepaymentAmount)
+                .afterRepaymentAmount(request.getRepaymentAmount())
+                .balance(updatedBalance.getBalance())
+                .createdAt(repayment.getCreatedAt())
+                .updatedAt(repayment.getUpdatedAt())
+                .build();
     }
 
     private boolean isRepayableApplication(Long applicationId) {
