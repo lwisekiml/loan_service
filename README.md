@@ -21,7 +21,7 @@
 <br/>
 
 ### 03. 대출 상담 등록 기능 구현
-- postman  
+> postman  
 
 
     <요청>
@@ -61,7 +61,7 @@
 <br/>
 
 ### 04.대출 상담 조회 기능 구현
-- postman
+> postman
 
 
     <요청>
@@ -103,7 +103,7 @@
 <br/>
 
 ### 05.대출 상담 수정 기능 구현
-- postman
+> postman
 
 
     <요청>
@@ -143,7 +143,7 @@
 <br/>
 
 ### 06.대출 상담 삭제 기능 구현
-- postman
+> postman
 
 
     <요청>
@@ -181,7 +181,7 @@
 <br/>
 
 ### 03. 대출 신청 등록 기능 구현
-- postman
+> postman
 
 
     <요청>
@@ -215,7 +215,7 @@
 <br/>
 
 ## Ch04. 대출 신청 조회 기능 구현
-- postman
+> postman
 
 
     <요청>
@@ -254,7 +254,7 @@
 <br/>
 
 ### 05.대출 상담 수정 기능 구현
-- postman
+> postman
 
 
     <요청>
@@ -288,7 +288,7 @@
 <br/>
 
 ### 06.대출 신청 삭제 기능 구현
-- postman
+> postman
 
 
     <요청>
@@ -318,7 +318,7 @@
 
 <br/>
 
-- postman
+> postman
 
 
     <요청>
@@ -347,7 +347,7 @@
 <br/>
 
 ## 08. 이용 약관 조회 기능 구현
-- postman
+> postman
 
 
     <아래와 같이 이용 약관 등록 요청을 내용이 다르게 두 번 보낸다.>
@@ -518,32 +518,49 @@
 <br/>
 
 ### 10.대출 신청 서류 등록 기능 구현
+>filetest 디렉토리를 생성 후 테스트
 
-- postman
+> postman
 
-
-    <요청>
-    [POST] http://localhost:8080/applications/files
-    [form-data]
-    image 파일 업로드
-
-    <응답>
-    {
-        "result": {
-            "code": "0000",
-            "desc": "success"
-        },
-        "data": null
-    }
-
-    설정한 위치에 image파일이 있는지 확인 한다.
-![img.png](image/img.png)
+![img.png](image/fileUpload.PNG)
 
 <br/>
 
+### 11.대출 신청 서류 조회 기능 구현
+> postman
 
+![img.png](image/searchFileInfo.PNG)
 
+<br/>
 
+### 12.대출 신청 서류 삭제 기능 구현
+> filetest 디렉토리도 삭제된다.
+> postman
+
+![img.png](image/deleteFile.PNG)
+
+<br/>
+
+### 13. 대출 신청 신청 서류 매핑 기능 구현
+- 대출 신청 등록  
+
+![img.png](image/applyRegister.PNG)
+
+<br/>
+  
+- 파일 업로드  
+
+![img.png](image/fileUpload_afterMapping.PNG)
+
+![img.png](image/file_1_8.PNG)
+
+<br/>
+
+- 파일 삭제
+
+![img.png](image/deleteFile_afterMapping.PNG)
+
+![img.png](image/file_afterDelete.PNG)
 
 
 
