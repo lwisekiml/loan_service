@@ -85,4 +85,10 @@ public class ApplicationController {
         }).collect(Collectors.toList());
         return ok(fileInfos);
     }
+
+    @DeleteMapping("/files")
+    public ResponseDTO<Void> deleteAll() {
+        fileStorageService.deleteAll();
+        return ok();
+    }
 }

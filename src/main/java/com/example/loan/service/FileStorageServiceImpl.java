@@ -60,4 +60,9 @@ public class FileStorageServiceImpl implements FileStorageService {
             throw new BaseException(ResultType.SYSTEM_ERROR);
         }
     }
+
+    @Override
+    public void deleteAll() {
+        FileSystemUtils.deleteRecursively(Paths.get(uploadPath).toFile());
+    }
 }
