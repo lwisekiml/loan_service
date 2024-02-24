@@ -17,4 +17,6 @@ public interface RepaymentService {
     // 상환 정보를 직접적으로 수정하므로 repaymentId로 함
     UpdateResponse update(Long repaymentId, Request request);
 
+
+    void delete(Long repaymentId);
 }
