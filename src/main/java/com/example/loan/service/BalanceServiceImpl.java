@@ -22,17 +22,18 @@ public class BalanceServiceImpl implements BalanceService {
 
     @Override
     public Response create(Long applicationId, BalanceDTO.Request request) {
-        // 존재 하면 (이미 집행한 정보가 있어서 잔고 테이블 못만든다.)
-        if (balanceRepository.findByApplicationId(applicationId).isPresent()) {
-            throw new BaseException(ResultType.SYSTEM_ERROR);
-        }
-
         Balance balance = modelMapper.map(request, Balance.class);
 
         // 첫 생성은 entry amount 를 balance
         BigDecimal entryAmount = request.getEntryAmount();
         balance.setApplicationId(applicationId);
         balance.setBalance(entryAmount);
+
+        balanceRepository.findByApplicationId(applicationId).ifPresent(b -> {
+            balance.setBalanceId(b.getBalanceId());
+            balance.setIsDeleted(b.getIsDeleted());
+            balance.setCreatedAt(b.getCreatedAt());
+        });
 
         Balance saved = balanceRepository.save(balance);
 

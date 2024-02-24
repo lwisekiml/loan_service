@@ -92,6 +92,29 @@ public class EntryServiceImpl implements EntryService {
                 .build();
     }
 
+    @Override
+    public void delete(Long entryId) {
+        // entry 존재 유무
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        entry.setIsDeleted(true);
+
+        entryRepository.save(entry);
+
+        // 삭제를 했을 때 얼마를 집행했었는데 이 금액이 0이 되었다를 알아야 하니 balance를 삭제하지 않고 잔고를 0원으로 세팅하는 것으로 구현
+        BigDecimal beforeEntryAmount = entry.getEntryAmount();
+
+        Long applicationId = entry.getApplicationId();
+        balanceService.update(applicationId,
+                BalanceDTO.UpdateRequest.builder()
+                        .beforeEntryAmount(beforeEntryAmount)
+                        .afterEntryAmount(BigDecimal.ZERO)
+                        .build()
+        );
+    }
+
     /**
      * ApplicationServiceImpl -> contract() ->
      * // 계약 체결
