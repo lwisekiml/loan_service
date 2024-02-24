@@ -1,7 +1,9 @@
 package com.example.loan.service;
 
+import com.example.loan.dto.EntryDTO;
 import com.example.loan.dto.EntryDTO.Request;
 import com.example.loan.dto.EntryDTO.Response;
+import com.example.loan.dto.EntryDTO.UpdateResponse;
 
 public interface EntryService {
 
@@ -9,4 +11,5 @@ public interface EntryService {
 
     Response get(Long applicationId);
 
+    UpdateResponse update(Long entryId, Request request);
 }
