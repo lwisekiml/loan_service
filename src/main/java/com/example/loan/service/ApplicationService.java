@@ -15,4 +15,7 @@ public interface ApplicationService {
     void delete(Long applicationId);
 
     Boolean acceptTerms(Long applicationId, AcceptTerms request); // 약관에 동의 여부
+
+    Response contract(Long applicationId);
+
 }
