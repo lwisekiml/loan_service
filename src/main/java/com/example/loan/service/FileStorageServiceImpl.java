@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +48,16 @@ public class FileStorageServiceImpl implements FileStorageService {
             }
         } catch (Exception e) {
             throw new BaseException(ResultType.NOT_EXIST);
+        }
+    }
+
+    @Override
+    public Stream<Path> loadAll() {
+        try {
+            // uploadPath 경로에 있는 파일 리스트의 정보를 보여줌
+            return Files.walk(Paths.get(uploadPath), 1).filter(path -> !path.equals(Paths.get(uploadPath)));
+        } catch (Exception e) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
         }
     }
 }
