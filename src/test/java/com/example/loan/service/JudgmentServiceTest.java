@@ -69,4 +69,40 @@ public class JudgmentServiceTest {
         assertThat(actual.getApprovalAmount()).isSameAs(judgment.getApprovalAmount());
     }
 
+    @DisplayName("요청한 심사 Id가 존재하면 Judgment Entity를 Response로 리턴한다.")
+    @Test
+    void Should_ReturnResponseOfExistJudgmentEntity_When_RequestExistJudgmentId() {
+        Long findId = 1L;
+
+        Judgment entity = Judgment.builder()
+                .judgmentId(1L)
+                .build();
+
+        when(judgmentRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+
+        Response actual = judgmentService.get(1L);
+
+        assertThat(actual.getJudgmentId()).isSameAs(findId);
+    }
+
+    // TODO: get judgment of application
+    @Test
+    void Should_ReturnResponseOfExistJudgmentEntity_When_RequestExistApplicationId() {
+        Long findId = 1L;
+
+        Judgment judgmentEntity = Judgment.builder()
+                .judgmentId(1L)
+                .build();
+
+        Application applicationEntity = Application.builder()
+                .applicationId(1L)
+                .build();
+
+        when(applicationRepository.findById(findId)).thenReturn(Optional.ofNullable(applicationEntity));
+        when(judgmentRepository.findByApplicationId(findId)).thenReturn(Optional.ofNullable(judgmentEntity));
+
+        Response actual = judgmentService.getJudgmentOfApplication(findId);
+
+        assertThat(actual.getJudgmentId()).isSameAs(findId);
+    }
 }

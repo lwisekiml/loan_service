@@ -7,4 +7,8 @@ public interface JudgmentService {
 
     Response create(Request request);
 
+    Response get(Long judgmentId);
+
+    Response getJudgmentOfApplication(Long applicationId); // 대출 신청 정보에 해당하는 Judgment를 가져온다.
+
 }
