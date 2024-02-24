@@ -5,11 +5,14 @@ import com.example.loan.dto.EntryDTO.Request;
 import com.example.loan.dto.EntryDTO.Response;
 import com.example.loan.dto.EntryDTO.UpdateResponse;
 import com.example.loan.dto.RepaymentDTO;
+import com.example.loan.dto.RepaymentDTO.ListResponse;
 import com.example.loan.dto.ResponseDTO;
 import com.example.loan.service.EntryService;
 import com.example.loan.service.RepaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // 사후 처리에 대한 모든 관리를 내부 임직원이 한다라고 가정해서 Internal로 한다.
 @RequiredArgsConstructor
@@ -46,5 +49,10 @@ public class InternalController extends AbstractController {
     @PostMapping("{applicationId}/repayments")
     public ResponseDTO<RepaymentDTO.Response> create(@PathVariable Long applicationId, @RequestBody RepaymentDTO.Request request) {
         return ok(repaymentService.create(applicationId, request));
+    }
+
+    @GetMapping("{applicationId}/repayments")
+    public ResponseDTO<List<ListResponse>> getPayments(@PathVariable Long applicationId) {
+        return ok(repaymentService.get(applicationId));
     }
 }

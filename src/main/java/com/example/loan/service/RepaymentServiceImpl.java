@@ -5,6 +5,7 @@ import com.example.loan.domain.Entry;
 import com.example.loan.domain.Repayment;
 import com.example.loan.dto.BalanceDTO;
 import com.example.loan.dto.BalanceDTO.RepaymentRequest.RepaymentType;
+import com.example.loan.dto.RepaymentDTO;
 import com.example.loan.dto.RepaymentDTO.Response;
 import com.example.loan.exception.BaseException;
 import com.example.loan.exception.ResultType;
@@ -15,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.loan.dto.RepaymentDTO.Request;
 
@@ -60,6 +63,15 @@ public class RepaymentServiceImpl implements RepaymentService {
         response.setBalance(updateBalance.getBalance());
 
         return response;
+    }
+
+    @Override
+    public List<RepaymentDTO.ListResponse> get(Long applicationId) {
+        List<Repayment> repayments = repaymentRepository.findAllByApplicationId(applicationId);
+
+        return repayments.stream()
+                .map(r -> modelMapper.map(r, RepaymentDTO.ListResponse.class))
+                .collect(Collectors.toList());
     }
 
     private boolean isRepayableApplication(Long applicationId) {
