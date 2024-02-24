@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.google.cloud.tools.jib' version '3.2.0'
     id 'java'
 }
 
@@ -11,6 +12,26 @@ sourceCompatibility = '11'
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
+    }
+}
+
+jib {
+    from { // 어떤 베이스 이미지를 기준으로 만든 어플리케이션에 대한 이미지를 생성할 건지 정의
+        image = 'openjdk:11-jre-slim'
+    }
+    to {
+        image = 'example-loan' // 이미지 생성 미름
+        tags = ['0.0.1']
+    }
+    container { // classpath 정의
+        mainClass = 'com.example.loan.LoanApplication'
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        format = 'OCI'
+        volumes = ['/var/tmp']
+        // 스프링 부트의 클래스 패스를 명시
+        entrypoint = ['java'
+                      , '-cp', '/app/resources:/app/classes:/app/libs/*'
+                      , 'com.example.loan.LoanApplication']
     }
 }
 

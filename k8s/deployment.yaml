@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-loan
+spec:
+  selector:
+    matchLabels:
+      app: example-loan
+  template:
+    metadata:
+      labels:
+        app: example-loan
+    spec:
+      containers:
+        - name: example-loan
+          image: example-loan
+          ports:
+            - containerPort: 8080
