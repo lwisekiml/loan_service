@@ -60,5 +60,5 @@ public class Application extends BaseEntity {
     private BigDecimal approvalAmount;
 
     @Column(columnDefinition = "datetime DEFAULT NULL COMMENT '계약일자'")
-    private LocalDateTime contractAt;
+    private LocalDateTime contractedAt;
 }

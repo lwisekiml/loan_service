@@ -147,7 +147,7 @@ public class ApplicationServiceImpl implements ApplicationService{
         }
 
         // 계약 체결
-        application.setContractAt(LocalDateTime.now());
+        application.setContractedAt(LocalDateTime.now());
 
         Application updated = applicationRepository.save(application);
 
