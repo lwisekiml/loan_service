@@ -105,6 +105,7 @@ public class JudgmentServiceTest {
         assertThat(actual.getJudgmentId()).isSameAs(findId);
     }
 
+    @DisplayName("요청한 심사 Id가 존재하면 정보를 업데이트하여 Judgment Entity를 Response로 리턴한다.")
     @Test
     void Should_ReturnUpdatedResponseOfExistJudgmentEntity_When_RequestUpdateExistJudgmentInfo() {
         Judgment entity = Judgment.builder()
@@ -126,5 +127,22 @@ public class JudgmentServiceTest {
         assertThat(actual.getJudgmentId()).isSameAs(1L);
         assertThat(actual.getName()).isSameAs(request.getName());
         assertThat(actual.getApprovalAmount()).isSameAs(request.getApprovalAmount());
+    }
+
+    @DisplayName("요청한 심사 정보가 존재하면 Judgment Entity를 삭제한다.")
+    @Test
+    void Should_DeletedJudgmentEntity_When_RequestDeleteExistJudgmentInfo() {
+        Long targetId = 1L;
+
+        Judgment entity = Judgment.builder()
+                .judgmentId(1L)
+                .build();
+
+        when(judgmentRepository.save(ArgumentMatchers.any(Judgment.class))).thenReturn(entity);
+        when(judgmentRepository.findById(targetId)).thenReturn(Optional.ofNullable(entity));
+
+        judgmentService.delete(targetId);
+
+        assertThat(entity.getIsDeleted()).isSameAs(true);
     }
 }
